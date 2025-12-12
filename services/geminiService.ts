@@ -1,8 +1,21 @@
 import { GoogleGenAI } from "@google/genai";
 
-const apiKey = process.env.API_KEY || '';
+// safely access environment variables whether in Vite (import.meta.env) or standard process.env
+const getApiKey = () => {
+  // @ts-ignore
+  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_KEY) {
+    // @ts-ignore
+    return import.meta.env.VITE_API_KEY;
+  }
+  if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
+    return process.env.API_KEY;
+  }
+  return '';
+};
 
-// Initialize only if key exists to prevent immediate errors on load if missing
+const apiKey = getApiKey();
+
+// Initialize only if key exists
 const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export const generateCampaignIdeas = async (businessType: string): Promise<string> => {
