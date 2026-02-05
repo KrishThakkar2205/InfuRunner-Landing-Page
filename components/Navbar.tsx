@@ -1,22 +1,41 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { ViewType } from '../App';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onNavigate: (view: ViewType) => void;
+  currentView: ViewType;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const scrollToSection = (e: React.MouseEvent, id: string) => {
+  const handleLinkClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (currentView !== 'home') {
+      onNavigate('home');
+      // Wait for re-render before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
     setIsOpen(false);
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentView !== 'home') {
+      onNavigate('home');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     setIsOpen(false);
   };
 
@@ -30,9 +49,9 @@ const Navbar: React.FC = () => {
           </button>
           
           <div className="hidden md:flex space-x-8 items-center">
-            <button onClick={(e) => scrollToSection(e, 'about')} className="text-brand-black hover:text-brand-orange font-medium transition-colors focus:outline-none">About Us</button>
-            <button onClick={(e) => scrollToSection(e, 'features')} className="text-brand-black hover:text-brand-orange font-medium transition-colors focus:outline-none">Features</button>
-            <button onClick={(e) => scrollToSection(e, 'launch')} className="px-6 py-2.5 bg-brand-black text-white font-bold rounded-full hover:bg-brand-orange transition-all duration-300 shadow-lg hover:shadow-brand-orange/20 focus:outline-none">
+            <button onClick={(e) => handleLinkClick(e, 'about')} className="text-brand-black hover:text-brand-orange font-medium transition-colors focus:outline-none">About Us</button>
+            <button onClick={(e) => handleLinkClick(e, 'features')} className="text-brand-black hover:text-brand-orange font-medium transition-colors focus:outline-none">Features</button>
+            <button onClick={(e) => handleLinkClick(e, 'launch')} className="px-6 py-2.5 bg-brand-black text-white font-bold rounded-full hover:bg-brand-orange transition-all duration-300 shadow-lg hover:shadow-brand-orange/20 focus:outline-none">
               Join Waitlist
             </button>
           </div>
@@ -49,9 +68,9 @@ const Navbar: React.FC = () => {
       {isOpen && (
         <div className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-100 shadow-xl">
           <div className="px-4 pt-2 pb-6 space-y-4 flex flex-col items-center">
-            <button onClick={(e) => scrollToSection(e, 'about')} className="block w-full text-center py-2 text-lg text-brand-black font-medium focus:outline-none">About Us</button>
-            <button onClick={(e) => scrollToSection(e, 'features')} className="block w-full text-center py-2 text-lg text-brand-black font-medium focus:outline-none">Features</button>
-            <button onClick={(e) => scrollToSection(e, 'launch')} className="block w-full text-center py-3 bg-brand-orange text-white font-bold rounded-lg focus:outline-none">
+            <button onClick={(e) => handleLinkClick(e, 'about')} className="block w-full text-center py-2 text-lg text-brand-black font-medium focus:outline-none">About Us</button>
+            <button onClick={(e) => handleLinkClick(e, 'features')} className="block w-full text-center py-2 text-lg text-brand-black font-medium focus:outline-none">Features</button>
+            <button onClick={(e) => handleLinkClick(e, 'launch')} className="block w-full text-center py-3 bg-brand-orange text-white font-bold rounded-lg focus:outline-none">
               Join Waitlist
             </button>
           </div>
