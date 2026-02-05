@@ -1,8 +1,8 @@
 import React from 'react';
-import { ViewType } from '../App';
+import { RoutePath } from '../App';
 
 interface FooterProps {
-  onNavigate: (view: ViewType) => void;
+  onNavigate: (path: RoutePath) => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
@@ -15,10 +15,10 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
         
         <div className="text-gray-500 text-sm text-center md:text-right">
-          <p>&copy; {new Date().getFullYear()} InfluRunner Inc. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} InfluRunner Technologies LLP. All rights reserved.</p>
           <div className="flex gap-4 justify-center md:justify-end mt-2 font-medium">
-            <button onClick={() => onNavigate('privacy')} className="hover:text-brand-orange transition-colors focus:outline-none">Privacy Policy</button>
-            <button onClick={() => onNavigate('terms')} className="hover:text-brand-orange transition-colors focus:outline-none">Terms of Service</button>
+            <button onClick={() => onNavigate('/privacy-policy')} className="hover:text-brand-orange transition-colors focus:outline-none">Privacy Policy</button>
+            <button onClick={() => onNavigate('/terms-and-conditions')} className="hover:text-brand-orange transition-colors focus:outline-none">Terms of Service</button>
           </div>
         </div>
       </div>

@@ -8,36 +8,56 @@ import Footer from './components/Footer';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 
-export type ViewType = 'home' | 'privacy' | 'terms';
+export type RoutePath = '/' | '/privacy-policy' | '/terms-and-conditions';
 
 function App() {
-  const [view, setView] = useState<ViewType>('home');
+  const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
 
-  // Scroll to top whenever the view changes
+  // Listen for browser navigation (back/forward buttons)
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Scroll to top whenever the route changes
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [view]);
+  }, [currentPath]);
 
-  const handleNavigate = (newView: ViewType) => {
-    setView(newView);
+  const navigate = (path: RoutePath) => {
+    window.history.pushState({}, '', path);
+    setCurrentPath(path);
   };
 
-  return (
-    <div className="min-h-screen bg-white">
-      <Navbar onNavigate={handleNavigate} currentView={view} />
-      <main>
-        {view === 'home' && (
+  const renderContent = () => {
+    switch (currentPath) {
+      case '/privacy-policy':
+        return <PrivacyPolicy onBack={() => navigate('/')} />;
+      case '/terms-and-conditions':
+        return <TermsAndConditions onBack={() => navigate('/')} />;
+      default:
+        return (
           <>
-            <Hero />
+            <Hero navigate={navigate} />
             <About />
             <Features />
             <LaunchingSoon />
           </>
-        )}
-        {view === 'privacy' && <PrivacyPolicy onBack={() => setView('home')} />}
-        {view === 'terms' && <TermsAndConditions onBack={() => setView('home')} />}
+        );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      <Navbar onNavigate={navigate} currentPath={currentPath} />
+      <main>
+        {renderContent()}
       </main>
-      <Footer onNavigate={handleNavigate} />
+      <Footer onNavigate={navigate} />
     </div>
   );
 }

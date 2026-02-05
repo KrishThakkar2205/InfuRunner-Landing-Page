@@ -1,7 +1,12 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { RoutePath } from '../App';
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  navigate: (path: RoutePath) => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ navigate }) => {
   const scrollToSection = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);

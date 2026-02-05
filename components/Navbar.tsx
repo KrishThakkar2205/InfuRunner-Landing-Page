@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { ViewType } from '../App';
+import { RoutePath } from '../App';
 
 interface NavbarProps {
-  onNavigate: (view: ViewType) => void;
-  currentView: ViewType;
+  onNavigate: (path: RoutePath) => void;
+  currentPath: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
+const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPath }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleLinkClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    if (currentView !== 'home') {
-      onNavigate('home');
+    if (currentPath !== '/') {
+      onNavigate('/');
       // Wait for re-render before scrolling
       setTimeout(() => {
         const element = document.getElementById(id);
@@ -31,8 +31,8 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
   };
 
   const scrollToTop = () => {
-    if (currentView !== 'home') {
-      onNavigate('home');
+    if (currentPath !== '/') {
+      onNavigate('/');
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
